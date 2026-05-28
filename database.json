@@ -1,0 +1,168 @@
+{
+  "users": [
+    {
+      "id": "u-admin-1",
+      "email": "admin@freelancer.com",
+      "role": "admin",
+      "name": "David Vance (Freelancer)",
+      "company": "Vance Design & Dev",
+      "password_hash": "24031fd2f6b4e073ca14a00192e59e31d04135eec061614777e30d7051d92305"
+    },
+    {
+      "id": "u-client-acme",
+      "email": "acme@client.com",
+      "role": "client",
+      "name": "Sarah Jenkins",
+      "company": "Acme Corp",
+      "password_hash": "602cb11b98a3b8b0e8913b4fa81edb39eb51e7fbcca2a0c69134469739414002"
+    },
+    {
+      "id": "u-client-spark",
+      "email": "spark@client.com",
+      "role": "client",
+      "name": "Leo Chen",
+      "company": "Spark Labs",
+      "password_hash": "c303f8319e761ed808266cb6a0ba9cdfa8fc17a1ae5b15b6cd9a399f92d29469"
+    }
+  ],
+  "projects": [
+    {
+      "id": "p-as-dental",
+      "title": "Al-Safa Dental Clinic Patient Portal",
+      "description": "A premium patient appointment booking system & electronic health record portal. Crafted with medical grid layouts, specialized treatment timeline visualization, and secure private radiology attachments.",
+      "client_id": "u-client-acme",
+      "is_public": true,
+      "status": "active",
+      "progress": 75,
+      "deadline": "2026-06-30",
+      "category": "Web System",
+      "budget": "$24,500"
+    },
+    {
+      "id": "p-aura-mindset",
+      "title": "Aura Soundscape Companion App",
+      "description": "A dark-mode oriented mindfulness platform built with canvas animation loops, local key-value sound persistence, and detailed health metrics streaming telemetry.",
+      "client_id": "u-client-spark",
+      "is_public": true,
+      "status": "ongoing",
+      "progress": 40,
+      "deadline": "2026-07-15",
+      "category": "Mobile Engine",
+      "budget": "$32,000"
+    },
+    {
+      "id": "p-velo-fleet",
+      "title": "Velo Logistics Fleet Telemetry Dashboard",
+      "description": "An enterprise transit coordinate tracker and dispatch board utilizing interactive charts, fast filter arrays, and secure driver communication routes.",
+      "client_id": "u-client-acme",
+      "is_public": true,
+      "status": "completed",
+      "progress": 100,
+      "deadline": "2026-04-10",
+      "category": "Data Analytics",
+      "budget": "$45,000"
+    },
+    {
+      "id": "p-nova-carbon",
+      "title": "Nova Carbon Audit Infrastructure",
+      "description": "A public-facing ecological audit portal to measure, store, and display carbon asset index computations with printable cert export pathways.",
+      "client_id": null,
+      "is_public": true,
+      "status": "completed",
+      "progress": 100,
+      "deadline": "2026-05-01",
+      "category": "Public SaaS",
+      "budget": "$18,500"
+    }
+  ],
+  "messages": [
+    {
+      "id": "m-seed-1",
+      "project_id": "p-as-dental",
+      "sender_id": "u-admin-1",
+      "sender_name": "David Vance",
+      "sender_role": "admin",
+      "content": "Hi Sarah, I have uploaded the updated appointment booking flow blueprint under the Files vault. Please check out patient_booking_v1.pdf when you have a moment!",
+      "timestamp": "2026-05-27T09:30:00Z"
+    },
+    {
+      "id": "m-seed-2",
+      "project_id": "p-as-dental",
+      "sender_id": "u-client-acme",
+      "sender_name": "Sarah Jenkins",
+      "sender_role": "client",
+      "content": "Thanks David! The patient timeline adjustments look spectacular. I will review the file right away to see if it targets the new consult regulations.",
+      "timestamp": "2026-05-27T14:15:00Z"
+    },
+    {
+      "id": "m-seed-3",
+      "project_id": "p-as-dental",
+      "sender_id": "u-admin-1",
+      "sender_name": "David Vance",
+      "sender_role": "admin",
+      "content": "Absolutely. We bound the timing slots helper to check clinic standard calendar restrictions. Let me know if we need to adjust the automatic margins.",
+      "timestamp": "2026-05-27T16:45:00Z"
+    },
+    {
+      "id": "m-seed-4",
+      "project_id": "p-aura-mindset",
+      "sender_id": "u-admin-1",
+      "sender_name": "David Vance",
+      "sender_role": "admin",
+      "content": "Hey Leo! The SVG vector path morph loop is complete and streams at 60fps on mobile Safari. Let me know if you would like me to compile a test build page.",
+      "timestamp": "2026-05-28T08:00:00Z"
+    }
+  ],
+  "files": [
+    {
+      "id": "f-seed-1",
+      "project_id": "p-as-dental",
+      "name": "patient_booking_v1.pdf",
+      "size": "1.8 MB",
+      "uploaded_at": "2026-05-27T09:28:00Z",
+      "uploader_name": "David Vance",
+      "uploader_role": "admin",
+      "file_data": "data:application/pdf;base64,JVBERi0xLjQKJSDi48clN0YXJ0X0RlbnRhbF9QREZfTW9ja3VwCg=="
+    },
+    {
+      "id": "f-seed-2",
+      "project_id": "p-as-dental",
+      "name": "dental_clinic_branding_guidelines.pdf",
+      "size": "4.2 MB",
+      "uploaded_at": "2026-05-25T11:00:00Z",
+      "uploader_name": "Sarah Jenkins",
+      "uploader_role": "client",
+      "file_data": "data:application/pdf;base64,JVBERi0xLjQKJSDi48clN0YXJ0X0JyYW5kaW5nX01vY2t1cAo="
+    }
+  ],
+  "activityLogs": [
+    {
+      "id": "a-seed-1",
+      "project_id": "p-as-dental",
+      "text": "David Vance uploaded client asset: patient_booking_v1.pdf",
+      "timestamp": "2026-05-27T09:28:00Z",
+      "user_name": "David Vance"
+    },
+    {
+      "id": "a-seed-2",
+      "project_id": "p-as-dental",
+      "text": "Sarah Jenkins downloaded patient_booking_v1.pdf to study consultation flows",
+      "timestamp": "2026-05-27T14:20:00Z",
+      "user_name": "Sarah Jenkins"
+    },
+    {
+      "id": "a-seed-3",
+      "project_id": "p-as-dental",
+      "text": "David Vance adjusted milestone deadline to June 30th with updated requirements",
+      "timestamp": "2026-05-27T16:50:00Z",
+      "user_name": "David Vance"
+    },
+    {
+      "id": "a-seed-4",
+      "project_id": "p-aura-mindset",
+      "text": "David Vance registered vector morph path soundscape generator pipeline",
+      "timestamp": "2026-05-28T07:55:00Z",
+      "user_name": "David Vance"
+    }
+  ]
+}
