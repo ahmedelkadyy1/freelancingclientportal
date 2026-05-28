@@ -1,0 +1,6 @@
+{
+  "name": "Freelance Client Workspace",
+  "description": "A calm, professional workspace for freelancers and clients to track progress, share files, and communicate.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
