@@ -35,7 +35,7 @@ const DEFAULT_USERS: (User & { password_hash: string })[] = [
     role: 'admin',
     name: 'David Vance (Freelancer)',
     company: 'Vance Design & Dev',
-    password_hash: '24031fd2f6b4e073ca14a00192e59e31d04135eec061614777e30d7051d92305', // Secure SHA-256 Hash of "admin123"
+    password_hash: '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', // Secure SHA-256 Hash of "admin123"
   },
   {
     id: 'u-client-acme',
@@ -43,7 +43,7 @@ const DEFAULT_USERS: (User & { password_hash: string })[] = [
     role: 'client',
     name: 'Sarah Jenkins',
     company: 'Acme Corp',
-    password_hash: '602cb11b98a3b8b0e8913b4fa81edb39eb51e7fbcca2a0c69134469739414002', // Secure SHA-256 Hash of "acme123"
+    password_hash: '459aa9b36f4c740533a5fd26a10bbe674576210c10ac6e2befcd86f8d0405c99', // Secure SHA-256 Hash of "acme123"
   },
   {
     id: 'u-client-spark',
@@ -51,7 +51,7 @@ const DEFAULT_USERS: (User & { password_hash: string })[] = [
     role: 'client',
     name: 'Leo Chen',
     company: 'Spark Labs',
-    password_hash: 'c303f8319e761ed808266cb6a0ba9cdfa8fc17a1ae5b15b6cd9a399f92d29469', // Secure SHA-256 Hash of "spark123"
+    password_hash: '92f55da1cdca0fd9811daa0bc97455c9e9e2b16d29e4e142c56e5924a1446175', // Secure SHA-256 Hash of "spark123"
   },
 ];
 
