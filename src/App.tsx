@@ -130,7 +130,7 @@ export default function App() {
                     <h2 className="text-4xl sm:text-6xl font-display font-bold tracking-tight mt-6">
                       Bespoke Digital Architectural Systems
                     </h2>
-                    <p className="text-sm sm:text-lg text-slate-350 mt-4 max-w-2xl mx-auto font-light leading-relaxed">
+                    <p className="text-sm sm:text-lg text-slate-300 mt-4 max-w-2xl mx-auto font-light leading-relaxed">
                       Collaborative, secure systems designed and integrated with absolute focus on typography-first design, fluid performance, and zero clutter.
                     </p>
 
@@ -167,10 +167,10 @@ export default function App() {
       {/* PORTFOLIO SINGLE SPECIFICATION DRAWERS / POPUPS */}
       {selectedPortfolioProject && (
         <div className="fixed inset-y-0 inset-x-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl relative animate-fade-in flex flex-col md:flex-row max-h-[90vh]">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl relative animate-fade-in flex flex-col md:flex-row max-h-[90vh]">
             
             {/* Left Graphic Side */}
-            <div className="w-full md:w-1/2 bg-slate-50 relative min-h-[160px] md:min-h-full">
+            <div className="w-full md:w-1/2 bg-slate-50 dark:bg-slate-950 relative min-h-[160px] md:min-h-full">
               {selectedPortfolioProject.preview_image ? (
                 <img
                   src={selectedPortfolioProject.preview_image}
@@ -179,8 +179,8 @@ export default function App() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-brand-100 to-slate-200 flex items-center justify-center p-6">
-                  <span className="text-sm font-mono text-slate-400 uppercase tracking-widest">
+                <div className="w-full h-full bg-gradient-to-br from-brand-100/5 to-slate-200/5 dark:from-brand-950/20 dark:to-slate-800 flex items-center justify-center p-6">
+                  <span className="text-sm font-mono text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                     {selectedPortfolioProject.category}
                   </span>
                 </div>
@@ -188,7 +188,7 @@ export default function App() {
               {/* Back out Button */}
               <button
                 onClick={() => setSelectedPortfolioProject(null)}
-                className="absolute top-4 left-4 p-2 bg-white/90 backdrop-blur-sm hover:bg-white text-slate-700 rounded-full transition-all cursor-pointer shadow-sm md:hidden"
+                className="absolute top-4 left-4 p-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-full transition-all cursor-pointer shadow-sm md:hidden"
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
@@ -198,32 +198,32 @@ export default function App() {
             <div className="p-8 w-full md:w-1/2 flex flex-col justify-between overflow-y-auto">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-mono tracking-widest text-brand-600 uppercase font-semibold">
+                  <span className="text-[10px] font-mono tracking-widest text-brand-600 dark:text-brand-400 uppercase font-semibold">
                     {selectedPortfolioProject.category}
                   </span>
                   <button
                     onClick={() => setSelectedPortfolioProject(null)}
-                    className="hidden md:block p-1 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-800 rounded-lg transition-all cursor-pointer"
+                    className="hidden md:block p-1 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-150 rounded-lg transition-all cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
-                <h3 className="text-2xl font-display font-bold text-slate-900 tracking-tight">
+                <h3 className="text-2xl font-display font-bold text-slate-900 dark:text-slate-100 tracking-tight">
                   {selectedPortfolioProject.title}
                 </h3>
 
-                <p className="text-xs text-slate-500 mt-4 leading-relaxed font-light">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-4 leading-relaxed font-light">
                   {selectedPortfolioProject.description}
                 </p>
 
                 {/* Sub specifications grid */}
-                <div className="mt-6 pt-6 border-t border-slate-100 space-y-4">
+                <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-4">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-slate-400 flex items-center gap-1.5 font-light">
                       <Layers className="w-3.5 h-3.5" /> Structure Status
                     </span>
-                    <span className="font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md text-[10px] uppercase font-semibold">
+                    <span className="font-mono bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-md text-[10px] uppercase font-semibold">
                       {selectedPortfolioProject.status}
                     </span>
                   </div>
@@ -233,7 +233,7 @@ export default function App() {
                       <span className="text-slate-400 flex items-center gap-1.5 font-light">
                         <Coins className="w-3.5 h-3.5" /> Budget Estimate
                       </span>
-                      <span className="font-mono text-slate-800 font-semibold">
+                      <span className="font-mono text-slate-800 dark:text-slate-200 font-semibold">
                         {selectedPortfolioProject.budget}
                       </span>
                     </div>
@@ -243,7 +243,7 @@ export default function App() {
                     <span className="text-slate-400 flex items-center gap-1.5 font-light">
                       <Calendar className="w-3.5 h-3.5" /> Completed Date
                     </span>
-                    <span className="font-mono text-slate-800">
+                    <span className="font-mono text-slate-800 dark:text-slate-200">
                       {selectedPortfolioProject.deadline}
                     </span>
                   </div>
@@ -251,8 +251,8 @@ export default function App() {
               </div>
 
               {/* Login Callout details */}
-              <div className="mt-8 bg-slate-50 border border-slate-100 rounded-2xl p-4 text-[11px] leading-relaxed text-slate-500">
-                <span className="font-semibold text-slate-805 block mb-1">Collaborative Workspace</span>
+              <div className="mt-8 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-2xl p-4 text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
+                <span className="font-semibold text-slate-800 dark:text-slate-205 block mb-1">Collaborative Workspace</span>
                 To track live sprints, share secure asset deliverables, and stream design feedback logs, request client accounts from the project coordinator.
               </div>
             </div>
@@ -262,8 +262,8 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <footer className="text-center py-10 border-t border-slate-100 bg-white">
-        <p className="text-xs text-slate-400 font-mono tracking-wide">
+      <footer className="text-center py-10 border-t border-slate-100 dark:border-slate-800/80 bg-white dark:bg-slate-950">
+        <p className="text-xs text-slate-400 dark:text-slate-500 font-mono tracking-wide">
           © {new Date().getFullYear()} Freelance Workspace Portal. Powered by Node.js, Express & React.
         </p>
       </footer>

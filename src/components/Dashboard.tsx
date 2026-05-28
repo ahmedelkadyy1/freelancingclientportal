@@ -632,7 +632,7 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                   setOnboardingStep(1);
                   setIsOnboardingOpen(true);
                 }}
-                className="p-1.5 text-slate-405 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all cursor-pointer"
+                className="p-1.5 text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all cursor-pointer"
                 title="Trigger Guided Onboarding Walkthrough"
               >
                 <HelpCircle className="w-4 h-4" />
@@ -644,7 +644,7 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
           <div className="mb-6">
             <button
               onClick={() => setIsCommandPaletteOpen(true)}
-              className="w-full bg-slate-50 dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-150 dark:border-slate-800 text-slate-400 dark:text-slate-500 rounded-xl px-3.5 py-2.5 text-xs font-mono flex items-center justify-between transition-all cursor-pointer text-left"
+              className="w-full bg-slate-50 dark:bg-slate-950/40 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 rounded-xl px-3.5 py-2.5 text-xs font-mono flex items-center justify-between transition-all cursor-pointer text-left"
             >
               <div className="flex items-center gap-2">
                 <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
@@ -798,7 +798,7 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
 
                         <div className="mt-6 pt-4 border-t border-slate-50">
                           {/* Progress block */}
-                          <div className="flex items-center justify-between text-xs mb-1.5 font-mono text-slate-450 uppercase">
+                          <div className="flex items-center justify-between text-xs mb-1.5 font-mono text-slate-500 dark:text-slate-400 uppercase">
                             <span>Fulfillment</span>
                             <span>{project.progress}%</span>
                           </div>
@@ -827,7 +827,7 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                                     e.stopPropagation();
                                     handleDeleteProject(project.id);
                                   }}
-                                  className="text-slate-405 hover:text-rose-600 p-1 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
+                                  className="text-slate-400 hover:text-rose-600 p-1 rounded-md hover:bg-rose-50 transition-colors cursor-pointer"
                                   title="Completely Purge Project Workspace File"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
@@ -852,7 +852,7 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                         setSelectedProjectId(null);
                         setSelectedProject(null);
                       }}
-                      className="text-xs font-mono text-slate-400 hover:text-slate-850 flex items-center gap-1 cursor-pointer"
+                      className="text-xs font-mono text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 flex items-center gap-1 cursor-pointer"
                     >
                       ← Back to listings
                     </button>
@@ -942,26 +942,26 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                         </div>
 
                         <div>
-                          <div className="flex items-center justify-between text-xs mb-1.5 font-mono text-slate-450 uppercase">
+                          <div className="flex items-center justify-between text-xs mb-1.5 font-mono text-slate-500 dark:text-slate-400 uppercase">
                             <span>Stage Progress</span>
                             <span>{selectedProject?.progress}%</span>
                           </div>
-                          <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                             <div 
-                              className="h-full bg-slate-900 rounded-full transition-all duration-550"
+                              className="h-full bg-slate-900 dark:bg-slate-100 rounded-full transition-all duration-550"
                               style={{ width: `${selectedProject?.progress}%` }}
                             ></div>
                           </div>
                         </div>
 
-                        <div className="pt-4 border-t border-slate-50 text-[11px] text-slate-400 leading-relaxed font-light">
+                        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 dark:text-slate-500 leading-relaxed font-light">
                           {selectedProject?.description}
                         </div>
                       </div>
                     </div>
 
                     {/* ACTIVITY LOGS WIDGET */}
-                    <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-xs">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 shadow-xs">
                       <div className="flex items-center gap-2 mb-4">
                         <Activity className="w-4 h-4 text-slate-400" />
                         <h4 className="text-xs font-mono uppercase tracking-widest text-slate-400">
@@ -971,11 +971,11 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
 
                       <div className="space-y-4 max-h-[250px] overflow-y-auto pr-2">
                         {activities.length === 0 ? (
-                          <span className="text-xs text-slate-400 block font-light">No logged history found.</span>
+                          <span className="text-xs text-slate-400 dark:text-slate-500 block font-light">No logged history found.</span>
                         ) : (
                           activities.map(log => (
-                            <div key={log.id} className="text-xs border-l-2 border-slate-100 pl-3">
-                              <p className="text-slate-700 font-light">{log.text}</p>
+                            <div key={log.id} className="text-xs border-l-2 border-slate-100 dark:border-slate-800 pl-3">
+                              <p className="text-slate-700 dark:text-slate-300 font-light">{log.text}</p>
                               <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono mt-1">
                                 <span>{log.user_name}</span>
                                 <span>{new Date(log.timestamp).toLocaleDateString()}</span>
@@ -991,11 +991,11 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                   <div className="lg:col-span-2 space-y-6">
                     
                     {/* SECURE PROJECT MESSENGER CHAT */}
-                    <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-xs flex flex-col h-[520px]">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-805 rounded-2xl p-6 shadow-xs flex flex-col h-[520px]">
+                      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
                         <div className="flex items-center gap-2">
-                          <MessageSquare className="w-4 h-4 text-brand-500" />
-                          <h4 className="font-display font-medium text-slate-800 text-sm">
+                          <MessageSquare className="w-4 h-4 text-brand-500 text-brand-400" />
+                          <h4 className="font-display font-medium text-slate-805 dark:text-slate-100 text-sm">
                             Project Workspace Messenger
                           </h4>
                         </div>
@@ -1027,8 +1027,8 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                                 
                                 <div className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
                                   isMe 
-                                    ? 'bg-slate-900 text-slate-50 rounded-tr-none' 
-                                    : 'bg-slate-50 text-slate-800 border border-slate-100 rounded-tl-none'
+                                    ? 'bg-slate-900 dark:bg-slate-100 text-slate-50 dark:text-slate-950 rounded-tr-none' 
+                                    : 'bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 border border-slate-100 dark:border-slate-800 rounded-tl-none'
                                 }`}>
                                   {msg.content}
                                 </div>
@@ -1040,7 +1040,7 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                                   {currentUser.role === 'admin' && (
                                     <button
                                       onClick={() => handleDeleteMessage(msg.id)}
-                                      className="text-slate-350 hover:text-rose-600 transition-colors cursor-pointer"
+                                      className="text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
                                       title="Moderate / Delete Message"
                                     >
                                       <Trash2 className="w-3 h-3" />
@@ -1055,7 +1055,7 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                       </div>
 
                       {/* Message Input Interface */}
-                      <form onSubmit={handleSendMessage} className="mt-4 pt-4 border-t border-slate-150 flex gap-2">
+                      <form onSubmit={handleSendMessage} className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 flex gap-2">
                         <input
                           type="text"
                           value={newMessage}
@@ -1245,58 +1245,57 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                 <h4 className="text-xs font-mono uppercase tracking-widest text-slate-400 mb-4">
                   Quick Client Provisioner
                 </h4>
-
                 <form onSubmit={handleCreateClient} className="space-y-4">
                   <div>
-                    <label className="block text-xs text-slate-450 uppercase mb-1 font-mono">Client Name</label>
+                    <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase mb-1 font-mono">Client Name</label>
                     <input
                       type="text"
                       required
                       value={clientForm.name}
                       onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })}
                       placeholder="e.g. Alexis Martinez"
-                      className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2.5 text-xs"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2.5 text-xs"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs text-slate-450 uppercase mb-1 font-mono">Company / Entity</label>
+                    <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase mb-1 font-mono">Company / Entity</label>
                     <input
                       type="text"
                       value={clientForm.company}
                       onChange={(e) => setClientForm({ ...clientForm, company: e.target.value })}
                       placeholder="e.g. Apex Corp"
-                      className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2.5 text-xs"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2.5 text-xs"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs text-slate-450 uppercase mb-1 font-mono">Client Email</label>
+                    <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase mb-1 font-mono">Client Email</label>
                     <input
                       type="email"
                       required
                       value={clientForm.email}
                       onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })}
                       placeholder="alexis@apex.corp"
-                      className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2.5 text-xs"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2.5 text-xs"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs text-slate-450 uppercase mb-1 font-mono">Temporary Secure Password</label>
+                    <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase mb-1 font-mono">Temporary Secure Password</label>
                     <input
                       type="password"
                       required
                       value={clientForm.password}
                       onChange={(e) => setClientForm({ ...clientForm, password: e.target.value })}
                       placeholder="Set access credentials..."
-                      className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2.5 text-xs"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2.5 text-xs"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-mono text-xs uppercase px-4 py-3 rounded-xl transition-all cursor-pointer tracking-wider"
+                    className="w-full bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-white text-white dark:text-slate-950 font-mono text-xs uppercase px-4 py-3 rounded-xl transition-all cursor-pointer tracking-wider"
                   >
                     Register and Authorize Account
                   </button>
@@ -1312,67 +1311,67 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
       {/* MODAL 1: CREATE PROJECT (ADMIN ONLY) */}
       {isNewProjectModalOpen && (
         <div className="fixed inset-y-0 inset-x-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-white border border-slate-250 w-full max-w-xl rounded-2xl p-6 shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-xl rounded-2xl p-6 shadow-2xl relative">
             <button 
               onClick={() => setIsNewProjectModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-800 cursor-pointer"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:text-slate-500 dark:hover:text-slate-300 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-display font-medium text-slate-900 mb-2">
+            <h3 className="text-xl font-display font-medium text-slate-900 dark:text-slate-100 mb-2">
               Launch Client Project Workspace
             </h3>
-            <p className="text-xs text-slate-400 mb-6 font-light">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mb-6 font-light">
               Provision a new project dashboard. Choose whether to bind it to a private client account, or establish it as a public-facing portfolio asset.
             </p>
 
             <form onSubmit={handleCreateProject} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Project Title</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Project Title</label>
                   <input
                     type="text"
                     required
                     value={projForm.title}
                     onChange={(e) => setProjForm({ ...projForm, title: e.target.value })}
                     placeholder="e.g. Brand Audit MVP"
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Category tag</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Category tag</label>
                   <input
                     type="text"
                     required
                     value={projForm.category}
                     onChange={(e) => setProjForm({ ...projForm, category: e.target.value })}
                     placeholder="e.g. Web App / Brand"
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Project Description & Brief</label>
+                <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Project Description & Brief</label>
                 <textarea
                   required
                   rows={3}
                   value={projForm.description}
                   onChange={(e) => setProjForm({ ...projForm, description: e.target.value })}
                   placeholder="Set client project expectations and architectural objectives clearly..."
-                  className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Project Client Pairing</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Project Client Pairing</label>
                   <select
                     value={projForm.client_id}
                     onChange={(e) => setProjForm({ ...projForm, client_id: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   >
                     <option value="">Public Portfolio Item ONLY</option>
                     {allClients.map(c => (
@@ -1382,40 +1381,40 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                 </div>
 
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Project Visibility</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Project Visibility</label>
                   <div className="flex items-center gap-2 mt-2">
                     <input
                       type="checkbox"
                       id="proj-is-public-checker"
                       checked={projForm.is_public}
                       onChange={(e) => setProjForm({ ...projForm, is_public: e.target.checked })}
-                      className="w-4 h-4 text-brand-600 rounded bg-slate-50"
+                      className="w-4 h-4 text-brand-600 rounded bg-slate-50 dark:bg-slate-950 dark:border-slate-800"
                     />
-                    <label htmlFor="proj-is-public-checker" className="text-xs text-slate-700">Display in Public Work list</label>
+                    <label htmlFor="proj-is-public-checker" className="text-xs text-slate-700 dark:text-slate-300">Display in Public Work list</label>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Milestone Deadline</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Milestone Deadline</label>
                   <input
                     type="date"
                     required
                     value={projForm.deadline}
                     onChange={(e) => setProjForm({ ...projForm, deadline: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs text-slate-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-405 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Project Budget Scale (Optional)</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Project Budget Scale (Optional)</label>
                   <input
                     type="text"
                     value={projForm.budget}
                     onChange={(e) => setProjForm({ ...projForm, budget: e.target.value })}
                     placeholder="e.g. $18,000"
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   />
                 </div>
               </div>
@@ -1443,66 +1442,66 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
       {/* MODAL 2: REGISTER CLIENT USER ACCOUNT */}
       {isNewClientModalOpen && (
         <div className="fixed inset-y-0 inset-x-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-white border border-slate-250 w-full max-w-sm rounded-2xl p-6 shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl relative">
             <button 
               onClick={() => setIsNewClientModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-850 cursor-pointer"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-805 dark:text-slate-500 dark:hover:text-slate-300 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-display font-medium text-slate-900 mb-2">
+            <h3 className="text-xl font-display font-medium text-slate-900 dark:text-slate-100 mb-2">
               Provision Client Account
             </h3>
-            <p className="text-xs text-slate-400 mb-6 font-light">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mb-6 font-light">
               Add authorized credentials to allow clients to log in and review workspace components.
             </p>
 
             <form onSubmit={handleCreateClient} className="space-y-4">
               <div>
-                <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Full Name</label>
+                <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Full Name</label>
                 <input
                   type="text"
                   required
                   value={clientForm.name}
                   onChange={(e) => setClientForm({ ...clientForm, name: e.target.value })}
                   placeholder="e.g. Sarah Jenkins"
-                  className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Company Name</label>
+                <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Company Name</label>
                 <input
                   type="text"
                   value={clientForm.company}
                   onChange={(e) => setClientForm({ ...clientForm, company: e.target.value })}
                   placeholder="e.g. Acme Corp"
-                  className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Security Email</label>
+                <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Security Email</label>
                 <input
                   type="email"
                   required
                   value={clientForm.email}
                   onChange={(e) => setClientForm({ ...clientForm, email: e.target.value })}
                   placeholder="acme@client.com"
-                  className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Access Password</label>
+                <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Access Password</label>
                 <input
                   type="password"
                   required
                   value={clientForm.password}
                   onChange={(e) => setClientForm({ ...clientForm, password: e.target.value })}
                   placeholder="Set access security passphrase..."
-                  className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                 />
               </div>
 
@@ -1510,13 +1509,13 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                 <button
                   type="button"
                   onClick={() => setIsNewClientModalOpen(false)}
-                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-mono text-xs uppercase px-4 py-3 rounded-xl transition-all cursor-pointer"
+                  className="flex-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-xs uppercase px-4 py-3 rounded-xl transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-mono text-xs uppercase px-4 py-3 rounded-xl transition-all cursor-pointer"
+                  className="flex-1 bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 dark:hover:bg-white text-white dark:text-slate-950 font-mono text-xs uppercase px-4 py-3 rounded-xl transition-all cursor-pointer tracking-wider"
                 >
                   Register
                 </button>
@@ -1529,87 +1528,87 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
       {/* MODAL 3: EDIT PROJECT METRICS (ADMIN ONLY) */}
       {isEditingProject && (
         <div className="fixed inset-y-0 inset-x-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white border border-slate-250 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative">
             <button 
               onClick={() => setIsEditingProject(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-850 cursor-pointer"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:text-slate-500 dark:hover:text-slate-300 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-display font-medium text-slate-900 mb-2">
+            <h3 className="text-xl font-display font-medium text-slate-900 dark:text-slate-100 mb-2">
               Update Workspace Parameters
             </h3>
-            <p className="text-xs text-slate-400 mb-6 font-light">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mb-6 font-light">
               Fine-tune the project budget, adjust deadlines, progress percentage, or visibility settings.
             </p>
 
             <form onSubmit={handleUpdateProject} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Project Title</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Project Title</label>
                   <input
                     type="text"
                     required
                     value={editProjForm.title}
                     onChange={(e) => setEditProjForm({ ...editProjForm, title: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Category Code</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Category Code</label>
                   <input
                     type="text"
                     required
                     value={editProjForm.category}
                     onChange={(e) => setEditProjForm({ ...editProjForm, category: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Description Brief</label>
+                <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Description Brief</label>
                 <textarea
                   required
                   rows={2}
                   value={editProjForm.description}
                   onChange={(e) => setEditProjForm({ ...editProjForm, description: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-3 text-xs"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-3 text-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Finance Scale</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Finance Scale</label>
                   <input
                     type="text"
                     value={editProjForm.budget}
                     onChange={(e) => setEditProjForm({ ...editProjForm, budget: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Milestone Deadline</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Milestone Deadline</label>
                   <input
                     type="date"
                     required
                     value={editProjForm.deadline}
                     onChange={(e) => setEditProjForm({ ...editProjForm, deadline: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs text-slate-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-405 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Current State Status</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Current State Status</label>
                   <select
                     value={editProjForm.status}
                     onChange={(e) => setEditProjForm({ ...editProjForm, status: e.target.value as Project['status'] })}
-                    className="w-full bg-slate-50 border border-slate-200 focus:bg-white outline-none rounded-xl px-4 py-2 text-xs"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-950 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-900 outline-none rounded-xl px-4 py-2 text-xs"
                   >
                     <option value="active">active</option>
                     <option value="paused">paused</option>
@@ -1619,24 +1618,24 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                 </div>
 
                 <div>
-                  <label className="block text-xs text-slate-450 uppercase font-mono mb-1">Visibility Option</label>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono mb-1">Visibility Option</label>
                   <div className="flex items-center gap-2 mt-2">
                     <input
                       type="checkbox"
                       id="edit-is-public-tagger"
                       checked={editProjForm.is_public}
                       onChange={(e) => setEditProjForm({ ...editProjForm, is_public: e.target.checked })}
-                      className="w-4 h-4 text-brand-600 rounded"
+                      className="w-4 h-4 text-brand-600 rounded dark:bg-slate-950 dark:border-slate-800"
                     />
-                    <label htmlFor="edit-is-public-tagger" className="text-xs text-slate-700">Display in Public Gallery</label>
+                    <label htmlFor="edit-is-public-tagger" className="text-xs text-slate-705 dark:text-slate-300">Display in Public Gallery</label>
                   </div>
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <label className="block text-xs text-slate-450 uppercase font-mono">Stage Progress Completeness</label>
-                  <span className="text-xs font-mono font-semibold">{editProjForm.progress}%</span>
+                  <label className="block text-xs text-slate-500 dark:text-slate-400 uppercase font-mono">Stage Progress Completeness</label>
+                  <span className="text-xs font-mono font-semibold text-slate-900 dark:text-slate-100">{editProjForm.progress}%</span>
                 </div>
                 <input
                   type="range"
@@ -1644,7 +1643,7 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                   max="100"
                   value={editProjForm.progress}
                   onChange={(e) => setEditProjForm({ ...editProjForm, progress: Number(e.target.value) })}
-                  className="w-full accent-slate-900 cursor-pointer"
+                  className="w-full accent-slate-900 dark:accent-slate-100 cursor-pointer"
                 />
               </div>
 

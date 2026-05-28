@@ -20,7 +20,7 @@ export default function Navbar({ currentUser, onLogout, activeTab, setActiveTab,
             onClick={() => setActiveTab('portfolio')}
             className="flex items-center gap-2.5 cursor-pointer group"
           >
-            <div className="w-8 h-8 rounded-lg bg-slate-905 dark:bg-slate-50 flex items-center justify-center text-white dark:text-slate-950 font-display font-bold text-sm tracking-wider group-hover:bg-brand-600 transition-all shadow-xs">
+            <div className="w-8 h-8 rounded-lg bg-slate-900 dark:bg-slate-50 flex items-center justify-center text-white dark:text-slate-950 font-display font-bold text-sm tracking-wider group-hover:bg-brand-600 transition-all shadow-xs">
               FL
             </div>
             <div>
@@ -38,7 +38,7 @@ export default function Navbar({ currentUser, onLogout, activeTab, setActiveTab,
             {/* Dark Mode Icon Switcher */}
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-405 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all cursor-pointer"
+              className="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all cursor-pointer"
               title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
               {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
@@ -51,7 +51,7 @@ export default function Navbar({ currentUser, onLogout, activeTab, setActiveTab,
                   className={`text-xs font-mono uppercase tracking-wider py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
                     activeTab === 'portfolio'
                       ? 'text-brand-600 bg-brand-50/50 dark:bg-brand-500/10 font-semibold'
-                      : 'text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                   }`}
                 >
                   Portfolio
@@ -61,7 +61,7 @@ export default function Navbar({ currentUser, onLogout, activeTab, setActiveTab,
                   className={`text-xs font-mono uppercase tracking-wider py-1.5 px-3 rounded-lg flex items-center gap-1.5 transition-all cursor-pointer ${
                     activeTab === 'portal'
                       ? 'text-brand-600 bg-brand-50/50 dark:bg-brand-500/10 font-semibold'
-                      : 'text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                   }`}
                 >
                   Client Login
@@ -77,7 +77,7 @@ export default function Navbar({ currentUser, onLogout, activeTab, setActiveTab,
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </div>
                   <div className="text-left leading-none">
-                    <span className="text-xs font-medium text-slate-750 dark:text-slate-100 block">
+                    <span className="text-xs font-medium text-slate-700 dark:text-slate-100 block">
                       {currentUser.name}
                     </span>
                     <span className="text-[9px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-widest block mt-0.5">
@@ -88,7 +88,7 @@ export default function Navbar({ currentUser, onLogout, activeTab, setActiveTab,
 
                 <button
                   onClick={onLogout}
-                  className="p-2 sm:px-3 sm:py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-705 text-slate-600 dark:text-slate-350 hover:text-slate-900 dark:hover:text-slate-100 rounded-lg transition-all flex items-center gap-1.5 text-xs font-mono cursor-pointer"
+                  className="p-2 sm:px-3 sm:py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 rounded-lg transition-all flex items-center gap-1.5 text-xs font-mono cursor-pointer"
                   title="Sign Out Session"
                 >
                   <LogOut className="w-3.5 h-3.5" />
