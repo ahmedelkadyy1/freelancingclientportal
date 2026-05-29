@@ -273,16 +273,40 @@ function saveData(data: DataStore) {
 // Instantiate Database
 let db = loadData();
 
+// Helper to parse cookies from headers manually
+function parseCookies(cookieHeader?: string): Record<string, string> {
+  const list: Record<string, string> = {};
+  if (!cookieHeader) return list;
+  cookieHeader.split(';').forEach(cookie => {
+    const parts = cookie.split('=');
+    if (parts.length >= 2) {
+      list[parts[0].trim()] = decodeURIComponent(parts.slice(1).join('='));
+    }
+  });
+  return list;
+}
+
 // Simple custom auth middleware
-// We represent authorized identity using a simple custom bearer scheme: UserID-Key
-// In production we would sign with JWT, but since we are focusing on fully pristine, robust
-// standard Node-Express mechanics, this offers immediate absolute verification.
+// Supports BOTH Bearer token headers and Cookie-based authentication!
 function authenticateUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+  let token: string | undefined;
+
+  // 1. Check Authorization Bearer header
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Authorization header required.' });
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1];
   }
-  const token = authHeader.split(' ')[1];
+
+  // 2. Check HTTP cookie 'portal_session'
+  if (!token && req.headers.cookie) {
+    const cookies = parseCookies(req.headers.cookie);
+    token = cookies['portal_session'];
+  }
+
+  if (!token) {
+    return res.status(401).json({ error: 'Authorization header or session cookie required.' });
+  }
+
   const user = db.users.find(u => u.id === token);
   if (!user) {
     return res.status(403).json({ error: 'Access token expired or invalid.' });
@@ -294,6 +318,20 @@ function authenticateUser(req: express.Request, res: express.Response, next: exp
 
 // --- API ROUTES ---
 
+// Restore session state (Cookie Auth verification)
+app.get('/api/auth/me', authenticateUser, (req, res) => {
+  const user = (req as any).user as User;
+  res.json({
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      name: user.name,
+      company: user.company,
+    }
+  });
+});
+
 // Login
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
@@ -304,7 +342,14 @@ app.post('/api/auth/login', (req, res) => {
   if (!targetUser || targetUser.password_hash !== hashPassword(password)) {
     return res.status(401).json({ error: 'Invalid email or password.' });
   }
-  // Return user info and simulated token (user.id serves as simple secure authenticated token)
+
+  // Set Cookie for automatic session tracking (28 days max age)
+  res.setHeader(
+    'Set-Cookie',
+    `portal_session=${targetUser.id}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2419200`
+  );
+
+  // Return user info and simulated token
   res.json({
     token: targetUser.id,
     user: {
@@ -315,6 +360,15 @@ app.post('/api/auth/login', (req, res) => {
       company: targetUser.company,
     }
   });
+});
+
+// Logout (Clear sessions)
+app.post('/api/auth/logout', (req, res) => {
+  res.setHeader(
+    'Set-Cookie',
+    'portal_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0'
+  );
+  res.json({ success: true });
 });
 
 // Create fresh client account (Admin only)

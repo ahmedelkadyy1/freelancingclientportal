@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Project } from '../types';
 import { FolderGit2, ArrowUpRight, Filter, Grid, RefreshCw } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface PortfolioProps {
   projects: Project[];
@@ -116,79 +117,95 @@ export default function Portfolio({ projects, onSelectProject, loading }: Portfo
           <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">Try resetting the filter configurations above.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map(project => (
-            <div
-              key={project.id}
-              onClick={() => onSelectProject(project)}
-              className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/60 rounded-2xl overflow-hidden hover:border-brand-200 dark:hover:border-brand-500/50 hover:shadow-lg transition-all duration-300 group cursor-pointer flex flex-col h-full"
-            >
-              {/* Graphic container */}
-              <div className="h-48 w-full bg-slate-50 dark:bg-slate-800/40 relative overflow-hidden flex items-center justify-center">
-                {project.preview_image ? (
-                  <img
-                    src={project.preview_image}
-                    alt={project.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-brand-50/50 to-slate-200 dark:from-brand-950/20 dark:to-slate-800 flex items-center justify-center p-6">
-                    <span className="text-sm font-mono text-slate-400 dark:text-slate-500 uppercase tracking-widest">
-                      {project.category}
-                    </span>
-                  </div>
-                )}
-                {/* Status Float tag */}
-                <div className="absolute top-4 left-4">
-                  <span
-                    className={`text-[10px] font-mono tracking-wider uppercase px-2 py-1 rounded-md font-semibold ${
-                      project.status === 'completed'
-                        ? 'bg-slate-900/90 dark:bg-slate-100 dark:text-slate-900 text-white backdrop-blur-xs'
-                        : 'bg-brand-500/90 text-white backdrop-blur-xs'
-                    }`}
-                  >
-                    {project.status}
-                  </span>
-                </div>
-              </div>
-
-              {/* Text metadata */}
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs text-brand-600 dark:text-brand-400 font-medium tracking-wide uppercase">
-                      {project.category}
-                    </span>
-                    {project.budget && (
-                      <span className="text-xs font-mono text-slate-400 dark:text-slate-500">
-                        Budget: {project.budget}
+        <motion.div 
+          layout
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project, index) => (
+              <motion.div
+                layout
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.25, delay: Math.min(index * 0.05, 0.2) }}
+                whileHover={{ 
+                  y: -6, 
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                }}
+                key={project.id}
+                onClick={() => onSelectProject(project)}
+                className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/60 rounded-2xl overflow-hidden hover:border-brand-200 dark:hover:border-brand-500/50 transition-all duration-300 group cursor-pointer flex flex-col h-full"
+              >
+                {/* Graphic container */}
+                <div className="h-48 w-full bg-slate-50 dark:bg-slate-800/40 relative overflow-hidden flex items-center justify-center">
+                  {project.preview_image ? (
+                    <motion.img
+                      src={project.preview_image}
+                      alt={project.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-brand-50/50 to-slate-200 dark:from-brand-950/20 dark:to-slate-800 flex items-center justify-center p-6">
+                      <span className="text-sm font-mono text-slate-400 dark:text-slate-505 uppercase tracking-widest">
+                        {project.category}
                       </span>
-                    )}
-                  </div>
-
-                  <h3 className="text-xl font-display font-medium text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-2">
-                    {project.title}
-                  </h3>
-
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 line-clamp-3 font-light leading-relaxed">
-                    {project.description}
-                  </p>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-slate-50 dark:border-slate-805 flex items-center justify-between text-xs font-medium text-slate-600 dark:text-slate-350">
-                  <span className="font-mono text-[11px] text-slate-400 dark:text-slate-505 uppercase">
-                    Deadline: {project.deadline}
-                  </span>
-                  <div className="flex items-center gap-1 text-slate-700 dark:text-slate-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
-                    <span>View Specifications</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </div>
+                  )}
+                  {/* Status Float tag */}
+                  <div className="absolute top-4 left-4">
+                    <span
+                      className={`text-[10px] font-mono tracking-wider uppercase px-2 py-1 rounded-md font-semibold ${
+                        project.status === 'completed'
+                          ? 'bg-slate-900/90 dark:bg-slate-100 dark:text-slate-900 text-white backdrop-blur-xs'
+                          : 'bg-brand-500/90 text-white backdrop-blur-xs'
+                      }`}
+                    >
+                      {project.status}
+                    </span>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+
+                {/* Text metadata */}
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs text-brand-600 dark:text-brand-400 font-medium tracking-wide uppercase">
+                        {project.category}
+                      </span>
+                      {project.budget && (
+                        <span className="text-xs font-mono text-slate-400 dark:text-slate-505">
+                          Budget: {project.budget}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="text-xl font-display font-medium text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-2">
+                      {project.title}
+                    </h3>
+
+                    <p className="text-sm text-slate-505 text-slate-500 dark:text-slate-400 mt-2 line-clamp-3 font-light leading-relaxed">
+                      {project.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-slate-50 dark:border-slate-805 flex items-center justify-between text-xs font-medium text-slate-600 dark:text-slate-350">
+                    <span className="font-mono text-[11px] text-slate-400 dark:text-slate-505 uppercase">
+                      Deadline: {project.deadline}
+                    </span>
+                    <div className="flex items-center gap-1 text-slate-700 dark:text-slate-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                      <span>View Specifications</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
     </div>
   );

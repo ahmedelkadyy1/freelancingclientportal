@@ -30,8 +30,11 @@ import {
   Terminal,
   HelpCircle,
   Sparkles,
-  BookOpen
+  BookOpen,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface DashboardProps {
   currentUser: User;
@@ -76,6 +79,64 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  // Text-To-Speech (TTS) Narration States & Event Handlers
+  const [speakingMessageIndex, setSpeakingMessageIndex] = useState<number | null>(null);
+  const speechUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  // Stop talking on unmount
+  useEffect(() => {
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const handleSpeakText = (text: string, index: number) => {
+    if (!window.speechSynthesis) {
+      alert("Voice speech synthesis options are unavailable or blocked in this frame workspace.");
+      return;
+    }
+
+    if (speakingMessageIndex === index) {
+      window.speechSynthesis.cancel();
+      setSpeakingMessageIndex(null);
+      return;
+    }
+
+    // Terminate previous speeches
+    window.speechSynthesis.cancel();
+
+    // High fidelity sanitization of markdown symbols so it sounds fully natural
+    const cleanText = text
+      .replace(/[*#_\-`~]|\[|\]|\(|\)/g, ' ') // Strip markdown syntax characters
+      .replace(/v3\.5-flash/gi, 'Gemini Flash Model')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    
+    // Attempt standard friendly English reader voices if present
+    const voices = window.speechSynthesis.getVoices();
+    const friendlyVoice = voices.find(v => v.name.includes("Google") || v.name.includes("Natural") || v.lang.startsWith("en"));
+    if (friendlyVoice) {
+      utterance.voice = friendlyVoice;
+    }
+
+    utterance.onend = () => {
+      setSpeakingMessageIndex(null);
+    };
+
+    utterance.onerror = (e) => {
+      console.warn("Speech Synthesis experienced error, resetting narrator status", e);
+      setSpeakingMessageIndex(null);
+    };
+
+    speechUtteranceRef.current = utterance;
+    setSpeakingMessageIndex(index);
+    window.speechSynthesis.speak(utterance);
+  };
   
   // Projects state
   const [projects, setProjects] = useState<Project[]>([]);
@@ -810,11 +871,17 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
       </aside>
 
       {/* DASHBOARD EXPLORE CHANNELS */}
-      <section className="flex-1 overflow-y-auto px-6 sm:px-8 py-8">
-        
-        {/* TAB 1: PROJECTS EXPLORE */}
-        {activeSubTab === 'projects' && (
-          <div className="h-full">
+      <section className="flex-1 overflow-y-auto px-6 sm:px-8 py-8 relative">
+        <AnimatePresence mode="wait">
+          {activeSubTab === 'projects' && (
+            <motion.div
+              key="projects-tab"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              className="h-full"
+            >
             {!selectedProjectId ? (
               // GENERAL PROJECTS LISTING
               <div>
@@ -1217,22 +1284,62 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                       {/* Copilot Chat Log */}
                       <div className="flex-1 overflow-y-auto space-y-4 pr-2 pb-4 border-t border-b border-slate-800 py-4 scroll-smooth">
                         {copilotMessages.map((msg, idx) => (
-                          <div 
+                          <motion.div 
+                            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ type: "spring", stiffness: 280, damping: 24, delay: Math.min(idx * 0.05, 0.25) }}
                             key={idx}
                             className={`flex flex-col max-w-[85%] ${
                               msg.role === 'user' ? 'ml-auto items-end' : 'mr-auto items-start'
                             }`}
                           >
-                            <span className="text-[9px] text-slate-400 font-mono mb-1.5 flex items-center gap-1">
-                              {msg.role === 'user' ? (
-                                <>You ({currentUser.name})</>
-                              ) : (
-                                <>
-                                  <Sparkles className="w-3 h-3 text-cyan-400 animate-pulse" />
-                                  Gemini Assistant
-                                </>
+                            <div className="w-full mb-1.5 flex items-center justify-between gap-4">
+                              <span className="text-[9px] text-slate-400 font-mono flex items-center gap-1.5">
+                                {msg.role === 'user' ? (
+                                  <>You ({currentUser.name})</>
+                                ) : (
+                                  <>
+                                    <Sparkles className="w-3 h-3 text-cyan-400 animate-pulse" />
+                                    Gemini Assistant
+                                  </>
+                                )}
+                              </span>
+
+                              {msg.role !== 'user' && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSpeakText(msg.text, idx)}
+                                  className={`flex items-center gap-1 text-[9px] font-mono px-2 py-0.5 rounded-full border transition-all cursor-pointer ${
+                                    speakingMessageIndex === idx 
+                                      ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400/30' 
+                                      : 'bg-slate-800/40 text-slate-400 border-slate-700/60 hover:text-slate-200 hover:border-slate-600'
+                                  }`}
+                                  title={speakingMessageIndex === idx ? "Stop speech" : "Narrate with voice"}
+                                >
+                                  {speakingMessageIndex === idx ? (
+                                    <>
+                                      <VolumeX className="w-2.5 h-2.5 text-cyan-300 animate-pulse" />
+                                      <span className="text-cyan-300">Silence</span>
+                                      <span className="flex items-center gap-0.5 h-2 ml-1">
+                                        {[...Array(4)].map((_, i) => (
+                                          <motion.span
+                                            key={i}
+                                            animate={{ scaleY: [1, 2.5, 1] }}
+                                            transition={{ duration: 0.45, repeat: Infinity, repeatType: "reverse", delay: i * 0.1 }}
+                                            className="w-[1.5px] bg-cyan-400 rounded-full h-1.5 origin-center"
+                                          />
+                                        ))}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Volume2 className="w-2.5 h-2.5" />
+                                      <span>Speak</span>
+                                    </>
+                                  )}
+                                </button>
                               )}
-                            </span>
+                            </div>
                             <div className={`p-4 rounded-2xl text-xs leading-relaxed whitespace-pre-wrap ${
                               msg.role === 'user'
                                 ? 'bg-cyan-600 text-white rounded-tr-none border border-cyan-500/30 shadow-md font-sans font-medium'
@@ -1240,7 +1347,7 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                             }`}>
                               {msg.text}
                             </div>
-                          </div>
+                          </motion.div>
                         ))}
                         
                         {isCopilotLoading && (
@@ -1393,12 +1500,18 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                 </div>
               </div>
             )}
-          </div>
-        )}
+            </motion.div>
+          )}
 
-        {/* TAB 2: CONFIGURE CLIENT SECURE ACCOUNTS (ADMIN ONLY) */}
-        {activeSubTab === 'clients' && currentUser.role === 'admin' && (
-          <div>
+          {/* TAB 2: CONFIGURE CLIENT SECURE ACCOUNTS (ADMIN ONLY) */}
+          {activeSubTab === 'clients' && currentUser.role === 'admin' && (
+            <motion.div
+              key="clients-tab"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+            >
             <div className="mb-8">
               <h3 className="text-2xl font-display font-medium text-slate-900 tracking-tight">
                 Client Control Console
@@ -1508,8 +1621,9 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                 </form>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
       </section>
 
       {/* ----- POPUP MODALS ----- */}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AlertCircle, KeyRound, ChevronRight } from 'lucide-react';
 import { User } from '../types';
+import { motion } from 'motion/react';
 
 interface AuthPanelProps {
   onLoginSuccess: (token: string, user: User) => void;
@@ -39,7 +40,13 @@ export default function AuthPanel({ onLoginSuccess }: AuthPanelProps) {
   };
 
   return (
-    <div id="auth-panel-container" className="max-w-md mx-auto my-12 px-6 py-10 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl transition-all">
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 220, damping: 25 }}
+      id="auth-panel-container" 
+      className="max-w-md mx-auto my-12 px-6 py-10 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl transition-all"
+    >
       <div className="text-center mb-8">
         <div className="w-12 h-12 bg-slate-900 dark:bg-slate-800 text-white dark:text-brand-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
           <KeyRound className="w-5 h-5" />
@@ -97,6 +104,6 @@ export default function AuthPanel({ onLoginSuccess }: AuthPanelProps) {
           <ChevronRight className="w-4 h-4" />
         </button>
       </form>
-    </div>
+    </motion.div>
   );
 }
