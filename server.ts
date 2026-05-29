@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
 import { createServer as createViteServer } from 'vite';
+import { GoogleGenAI } from '@google/genai';
 import { User, Project, Message, FileMetadata, ActivityLog } from './src/types';
 
 // Cryptographic Password Hashing Helper
@@ -793,6 +794,129 @@ app.get('/api/projects/:id/activity', authenticateUser, (req, res) => {
   const activity = db.activityLogs.filter(a => a.project_id === req.params.id);
   // Sort descending by date
   res.json(activity.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()));
+});
+
+// Gemini AI Copilot Integration Route
+let aiClient: GoogleGenAI | null = null;
+function getGeminiClient(): GoogleGenAI {
+  if (!aiClient) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('GEMINI_API_KEY environment variable is missing.');
+    }
+    aiClient = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        },
+      },
+    });
+  }
+  return aiClient;
+}
+
+app.post('/api/gemini/copilot', authenticateUser, async (req, res) => {
+  const user = (req as any).user as User;
+  const { projectId, prompt, action, history } = req.body;
+
+  if (!projectId) {
+    return res.status(400).json({ error: 'Missing projectId identifier.' });
+  }
+
+  const project = db.projects.find(p => p.id === projectId);
+  if (!project) {
+    return res.status(404).json({ error: 'Workspace project not found under portal database.' });
+  }
+
+  // Permission validation check
+  if (user.role !== 'admin' && project.client_id !== user.id) {
+    return res.status(403).json({ error: 'You are unauthorized to access details for this project.' });
+  }
+
+  try {
+    const ai = getGeminiClient();
+
+    // Compile contextual workspace information from simulated JSON data
+    const projectFiles = db.files.filter(f => f.project_id === projectId);
+    const projectMessages = db.messages.filter(m => m.project_id === projectId);
+    const projectActivities = db.activityLogs.filter(a => a.project_id === projectId);
+    const clientUser = db.users.find(u => u.id === project.client_id);
+    const clientInfo = clientUser ? `${clientUser.name} (${clientUser.company || 'Autonomous Client'})` : 'Undefined Client';
+
+    const contextStr = `
+- **Project Title**: ${project.title}
+- **Sector/Category**: ${project.category}
+- **Budget Allocated**: ${project.budget || 'Not specified'}
+- **Completion Progress Stage**: ${project.progress}%
+- **Current Status**: ${project.status}
+- **Associated Client**: ${clientInfo}
+- **Key Project Summary**: ${project.description}
+- **Target Deadline**: ${project.deadline}
+
+### Project Deliverables Files List:
+${projectFiles.length === 0 ? '- No files uploaded yet.' : projectFiles.map(f => `- Name: "${f.name}", Uploaded at ${f.uploaded_at} by ${f.uploader_name} (${f.uploader_role})`).join('\n')}
+
+### Recent Auditor Activity Logs:
+${projectActivities.length === 0 ? '- No activities logged yet.' : projectActivities.slice(0, 15).map(a => `- [${a.timestamp}] ${a.text}`).join('\n')}
+
+### Recent Secure Discussion Portal Messages:
+${projectMessages.length === 0 ? '- No internal messaging recorded.' : projectMessages.slice(-10).map(m => `- [${m.timestamp}] ${m.sender_name} (${m.sender_role}): ${m.content}`).join('\n')}
+`;
+
+    const systemInstruction = `You are a talented Gemini Workspace Copilot integrated into a high-performance Freelance Client Portal.
+Your target role is to assist the Freelancer (David Vance) and his clients (e.g. Sarah Jenkins) within their private task workspace.
+You have direct read access to physical project metadata, attachments, messaging log sheets, and system auditing registers. Always leverage this ground truth data.
+Never mention files or systems like database.json, backend ports, or routes. Maintain the high-fidelity illusion of a highly competent product manager and technical coordinator.
+Format all replies in beautiful structured Markdown. Use sections, bold markers, and cleanly structured tables or list items.
+
+Selected Project Ground Truth context:
+${contextStr}
+`;
+
+    let promptToSend = prompt || '';
+    if (action === 'deliverables') {
+      promptToSend = `Please formulate a detailed step-by-step deliverables checklist for our project based on the descriptions. Break them into sequential implementation phases. For each milestone checklist item, assign an estimated stage-weight so we hit 100% progress before ${project.deadline}. Append category-specific guidelines for "${project.category}".`;
+    } else if (action === 'email') {
+      promptToSend = `Draft an update email from David Vance (Freelancer) to ${clientInfo} summarizing progress status (${project.progress}%), relevant file uploads, newest task operations, and outlining deliverables we are working towards to hit the target deadline of ${project.deadline}. Make it extremely reassuring, professional, and elegant.`;
+    } else if (action === 'scope') {
+      promptToSend = `Review our summary, then pitch 3 exciting creative features or interactive UI dashboard panels to add to our project scope. Explain how these additions raise product value, using a friendly and inspiring tone.`;
+    } else if (action === 'risks') {
+      promptToSend = `Evaluate timeline, budget, and scope risks for our project given target deadline ${project.deadline}, current progress ${project.progress}%, and details. Suggest 3 concrete mitigation actions David and the client can take starting today.`;
+    }
+
+    const contentsPayload: any[] = [];
+
+    // Map conversation history
+    if (history && Array.isArray(history)) {
+      history.slice(-12).forEach((h: any) => {
+        contentsPayload.push({
+          role: h.role === 'assistant' || h.role === 'model' ? 'model' : 'user',
+          parts: [{ text: h.content || h.text || '' }]
+        });
+      });
+    }
+
+    // Append target user query
+    contentsPayload.push({
+      role: 'user',
+      parts: [{ text: promptToSend }]
+    });
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.5-flash',
+      contents: contentsPayload,
+      config: {
+        systemInstruction,
+        temperature: 0.7,
+      },
+    });
+
+    res.json({ text: response.text });
+  } catch (error: any) {
+    console.error('Gemini Copilot Error:', error);
+    res.status(500).json({ error: error?.message || 'Failed to call Gemini AI service.' });
+  }
 });
 
 

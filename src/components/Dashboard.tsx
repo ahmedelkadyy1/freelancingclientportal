@@ -91,6 +91,13 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
   
   // Form input states
   const [newMessage, setNewMessage] = useState<string>('');
+
+  // Gemini AI Copilot States
+  const [copilotMessages, setCopilotMessages] = useState<Array<{ role: 'user' | 'assistant'; text: string }>>([
+    { role: 'assistant', text: 'Hi! I am your Gemini Project Copilot. I have analyzed this project\'s details, files, and recent audit logs. How can I assist you with this workspace today?' }
+  ]);
+  const [copilotInput, setCopilotInput] = useState('');
+  const [isCopilotLoading, setIsCopilotLoading] = useState(false);
   
   // Loaded items for admin
   const [allClients, setAllClients] = useState<User[]>([]);
@@ -252,6 +259,27 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
     }
   }, [messages]);
 
+  // Copilot messages scroll bottom anchor
+  const copilotEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (copilotEndRef.current) {
+      copilotEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [copilotMessages, isCopilotLoading]);
+
+  // Reset copilot greetings on project change
+  useEffect(() => {
+    if (selectedProject) {
+      setCopilotMessages([
+        { 
+          role: 'assistant', 
+          text: `Hi! I am your AI Copilot for "${selectedProject.title}". I am fully grounded in its configurations, current status, budget, files, and activity logs.\n\nTry using one of the quick commands below to: \n- **Generate a deliverables and tasks checklist**\n- **Draft a professional client status update email**\n- **Brainstorm layout and scope upgrades**\n- **Analyze timelines and technical risks**\n\nOr ask any custom question about the workspace files or progress!` 
+        }
+      ]);
+    }
+  }, [selectedProjectId]);
+
   // ----- HANDLERS -----
 
   const handleCreateProject = async (e: React.FormEvent) => {
@@ -372,6 +400,52 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
       }
     } catch {
       showToast('Message delivery failed.', 'error');
+    }
+  };
+
+  const handleSendCopilotMessage = async (customPrompt?: string, actionType?: string) => {
+    const promptToSend = customPrompt || copilotInput;
+    if (!promptToSend.trim() && !actionType) return;
+
+    const displayPrompt = actionType 
+      ? `[Quick Command] ${actionType === 'deliverables' ? 'Generate checklist' : actionType === 'email' ? 'Draft status email' : actionType === 'scope' ? 'Suggest scope upgrades' : 'Analyze timeline risks'}` 
+      : promptToSend;
+
+    // Add user message to state
+    const userMsg = { role: 'user' as const, text: displayPrompt };
+    setCopilotMessages(prev => [...prev, userMsg]);
+    setCopilotInput('');
+    setIsCopilotLoading(true);
+
+    try {
+      const res = await fetch('/api/gemini/copilot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          projectId: selectedProjectId,
+          prompt: promptToSend,
+          action: actionType,
+          history: copilotMessages.map(m => ({ 
+            role: m.role === 'assistant' ? 'assistant' : 'user', 
+            content: m.text 
+          }))
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setCopilotMessages(prev => [...prev, { role: 'assistant', text: data.text }]);
+      } else {
+        const err = await res.json();
+        setCopilotMessages(prev => [...prev, { role: 'assistant', text: `Sorry, we encountered a workspace execution issue: ${err.error || 'Unable to fetch intelligence.'}` }]);
+      }
+    } catch {
+      setCopilotMessages(prev => [...prev, { role: 'assistant', text: 'Error establishing connection with the workspace assistant.' }]);
+    } finally {
+      setIsCopilotLoading(false);
     }
   };
 
@@ -1066,6 +1140,138 @@ export default function Dashboard({ currentUser, token }: DashboardProps) {
                         <button
                           type="submit"
                           className="bg-slate-900 hover:bg-slate-800 text-white rounded-xl px-4 py-2 flex items-center justify-center transition-all cursor-pointer"
+                        >
+                          <Send className="w-3.5 h-3.5" />
+                        </button>
+                      </form>
+                    </div>
+
+                    {/* GEMINI AI WORKSPACE COPILOT COMPANION */}
+                    <div className="bg-slate-900 dark:bg-slate-950 text-white border border-slate-800 dark:border-slate-900 rounded-2xl p-6 shadow-xl flex flex-col h-[520px]">
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+                        <div className="flex items-center gap-2">
+                          <div className="bg-cyan-500/10 p-1.5 rounded-lg border border-cyan-500/30">
+                            <Sparkles className="w-4 h-4 text-cyan-400" />
+                          </div>
+                          <div>
+                            <h4 className="font-display font-medium text-slate-100 text-sm flex items-center gap-1.5">
+                              Gemini Workspace Copilot
+                              <span className="text-[9px] font-mono font-normal uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded-full border border-cyan-400/20">Active Grounding</span>
+                            </h4>
+                            <p className="text-[10px] text-slate-400 font-light mt-0.5">
+                              Real-Time Project Analysis & Spec Generation
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-mono text-cyan-400 tracking-wider">
+                          v3.5-flash
+                        </span>
+                      </div>
+
+                      {/* Copilot Action Panel Quick Buttons */}
+                      <div className="mb-4">
+                        <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block mb-2 font-medium">Quick Commands</span>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleSendCopilotMessage("Suggest deliverables checklist for the project", "deliverables")}
+                            disabled={isCopilotLoading}
+                            className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700 active:scale-95 text-[10px] font-mono rounded-xl p-2.5 text-center flex flex-col items-center justify-center gap-1 transition-all hover:border-cyan-500/50 hover:shadow-cyan-500/5 disabled:opacity-50 cursor-pointer text-slate-200"
+                          >
+                            <FileCheck className="w-4 h-4 text-cyan-400" />
+                            <span>📋 Checklist</span>
+                          </button>
+                          
+                          <button
+                            type="button"
+                            onClick={() => handleSendCopilotMessage("Draft client update email", "email")}
+                            disabled={isCopilotLoading}
+                            className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700 active:scale-95 text-[10px] font-mono rounded-xl p-2.5 text-center flex flex-col items-center justify-center gap-1 transition-all hover:border-cyan-500/50 hover:shadow-cyan-500/5 disabled:opacity-50 cursor-pointer text-slate-200"
+                          >
+                            <Send className="w-4 h-4 text-amber-400" />
+                            <span>✉️ Client Email</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleSendCopilotMessage("Suggest visual & feature scope enhancements", "scope")}
+                            disabled={isCopilotLoading}
+                            className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700 active:scale-95 text-[10px] font-mono rounded-xl p-2.5 text-center flex flex-col items-center justify-center gap-1 transition-all hover:border-cyan-500/50 hover:shadow-cyan-500/5 disabled:opacity-50 cursor-pointer text-slate-200"
+                          >
+                            <Sparkles className="w-4 h-4 text-emerald-400" />
+                            <span>💡 Scope Ideas</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleSendCopilotMessage("Analyze timeline and progress risks", "risks")}
+                            disabled={isCopilotLoading}
+                            className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700 active:scale-95 text-[10px] font-mono rounded-xl p-2.5 text-center flex flex-col items-center justify-center gap-1 transition-all hover:border-cyan-500/50 hover:shadow-cyan-500/5 disabled:opacity-50 cursor-pointer text-slate-200"
+                          >
+                            <AlertCircle className="w-4 h-4 text-rose-400" />
+                            <span>⚠️ Risk Check</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Copilot Chat Log */}
+                      <div className="flex-1 overflow-y-auto space-y-4 pr-2 pb-4 border-t border-b border-slate-800 py-4 scroll-smooth">
+                        {copilotMessages.map((msg, idx) => (
+                          <div 
+                            key={idx}
+                            className={`flex flex-col max-w-[85%] ${
+                              msg.role === 'user' ? 'ml-auto items-end' : 'mr-auto items-start'
+                            }`}
+                          >
+                            <span className="text-[9px] text-slate-400 font-mono mb-1.5 flex items-center gap-1">
+                              {msg.role === 'user' ? (
+                                <>You ({currentUser.name})</>
+                              ) : (
+                                <>
+                                  <Sparkles className="w-3 h-3 text-cyan-400 animate-pulse" />
+                                  Gemini Assistant
+                                </>
+                              )}
+                            </span>
+                            <div className={`p-4 rounded-2xl text-xs leading-relaxed whitespace-pre-wrap ${
+                              msg.role === 'user'
+                                ? 'bg-cyan-600 text-white rounded-tr-none border border-cyan-500/30 shadow-md font-sans font-medium'
+                                : 'bg-slate-800/70 border border-slate-700/40 text-slate-100 rounded-tl-none font-sans font-light'
+                            }`}>
+                              {msg.text}
+                            </div>
+                          </div>
+                        ))}
+                        
+                        {isCopilotLoading && (
+                          <div className="flex items-center gap-2.5 text-xs text-cyan-400 font-mono animate-pulse">
+                            <Sparkles className="w-4 h-4 text-cyan-400 animate-spin" />
+                            <span>Grounding params, drafting intelligent specification...</span>
+                          </div>
+                        )}
+                        <div ref={copilotEndRef} />
+                      </div>
+
+                      {/* Input Interface */}
+                      <form 
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          handleSendCopilotMessage();
+                        }} 
+                        className="mt-4 flex gap-2"
+                      >
+                        <input
+                          type="text"
+                          value={copilotInput}
+                          onChange={(e) => setCopilotInput(e.target.value)}
+                          placeholder="Ask Gemini about project designs, contract drafting, files..."
+                          className="flex-1 bg-slate-800/60 border border-slate-700 focus:border-cyan-500/80 focus:bg-slate-805 text-white placeholder:text-slate-500 text-xs rounded-xl px-4 py-2.5 outline-none transition-all font-sans"
+                          disabled={isCopilotLoading}
+                        />
+                        <button
+                          type="submit"
+                          disabled={isCopilotLoading || !copilotInput.trim()}
+                          className="bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 disabled:hover:bg-cyan-600 text-white font-mono text-xs rounded-xl px-4 py-2 flex items-center justify-center transition-all cursor-pointer shadow-lg shadow-cyan-900/40"
                         >
                           <Send className="w-3.5 h-3.5" />
                         </button>
